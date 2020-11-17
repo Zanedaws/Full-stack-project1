@@ -3,6 +3,7 @@
 import flask
 import sqlite3
 import datetime
+import hashlib
 
 app = flask.Flask(__name__, static_folder="styles/")
 
@@ -14,7 +15,7 @@ def login_get():
 def login_post():
     user = flask.request.form['user']
     pswd = flask.request.form['pass']
-    iden = hash((user,pswd))
+    iden = int(hashlib.shake_256(user.encode('utf-8')+pswd.encode('utf-8')).hexdigest(4), 16)
     return flask.redirect(flask.url_for(hash=iden, endpoint='feed_get'))
 
 @app.route("/<hash>/profile", methods=["GET"])
@@ -60,8 +61,8 @@ def create_post(user):
     title = flask.request.form['title']
     conn = sqlite3.connect("data/database.db")
     c = conn.cursor()
-
-    data=(int(user),hash((content,datetime.datetime.now().timestamp())),0,content,title)
+    postHash = int(hashlib.shake_256(content.encode('utf-8')+title.encode('utf-8')+datetime.datetime.timestamp().encode('utf-8')).hexdigest(4),16)
+    data=(int(user),postHash,0,content,title)
     print(data)
     try:
         c.execute("INSERT INTO posts (userHash, postHash, likes, content, title) VALUES (?,?,?,?,?)",data)
@@ -79,7 +80,7 @@ def register_get():
 def register_post():
     user = flask.request.form['user']
     pswd = flask.request.form['pass']
-    iden = hash((user,pswd))
+    iden = int(hashlib.shake_256(user.encode('utf-8')+pswd.encode('utf-8')).hexdigest(4),16)
     conn = sqlite3.connect("data/database.db")
     c = conn.cursor()
     if(c.execute("SELECT * FROM users WHERE hash=?",(iden,)).fetchall() == []):
