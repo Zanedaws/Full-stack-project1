@@ -1,0 +1,1 @@
+CREATE TABLE users (user TEXT,pass TEXT,hash INT PRIMARY KEY);
