@@ -61,7 +61,7 @@ def create_post(user):
     title = flask.request.form['title']
     conn = sqlite3.connect("data/database.db")
     c = conn.cursor()
-    postHash = int(hashlib.shake_256(content.encode('utf-8')+title.encode('utf-8')+datetime.datetime.timestamp().encode('utf-8')).hexdigest(4),16)
+    postHash = int(hashlib.shake_256(content.encode('utf-8')+title.encode('utf-8')+str(datetime.datetime.now()).encode('utf-8')).hexdigest(4),16)
     data=(int(user),postHash,0,content,title)
     print(data)
     try:
