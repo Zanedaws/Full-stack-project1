@@ -16,7 +16,13 @@ def login_post():
     user = flask.request.form['user']
     pswd = flask.request.form['pass']
     iden = int(hashlib.shake_256(user.encode('utf-8')+pswd.encode('utf-8')).hexdigest(4), 16)
-    return flask.redirect(flask.url_for(hash=iden, endpoint='feed_get'))
+    conn = sqlite3.connect("data/database.db")
+    c = conn.cursor()
+    if (c.execute("SELECT * FROM users WHERE hash=?", (iden,)).fetchall() != []):
+        print(c.fetchall())
+        return flask.redirect(flask.url_for(hash=iden, endpoint='feed_get'))
+    else:
+        return flask.render_template('login.html')
 
 @app.route("/<hash>/profile", methods=["GET"])
 def profile_get(hash):
@@ -87,10 +93,10 @@ def register_post():
         c.execute("INSERT INTO users VALUES (?,?,?)", (user, pswd, iden))
         conn.commit()
         conn.close()
-        return flask.redirect(flask.url_for(hash=iden, endpoint='feed_get'))
+        return flask.redirect(flask.url_for(hash=iden, endpoint='profile_get'))
     else:
         conn.close()
-        return flask.redirect(flask.url_for(hash=iden, endpoint='feed_get'))
+        return flask.redirect(flask.url_for(hash=iden, endpoint='profile_get'))
 
 if __name__ == "__main__":
     app.run(port=5001, host='127.0.0.1', debug=True, use_evalex=False)
