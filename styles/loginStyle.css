@@ -10,14 +10,14 @@
     border-radius: 5px;
 }
 
-#pass{
+#user{
     position:absolute;
     top: 35%;
     left:8%;
     width: 80%;
 }
 
-#user{
+#pass{
     position:absolute;
     top: 50%;
     left:8%;

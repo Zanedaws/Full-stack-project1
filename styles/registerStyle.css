@@ -10,14 +10,14 @@
     border-radius: 5px;
 }
 
-#pass{
+#user{
     position:absolute;
     top: 35%;
     left:8%;
     width: 80%;
 }
 
-#user{
+#pass{
     position:absolute;
     top: 50%;
     left:8%;
@@ -68,7 +68,7 @@
 }
 
 #colorBox1{
-    background:blue;
+    background:red;
     position:absolute;
     height:75%;
     width:25%;
@@ -86,7 +86,7 @@
 }
 
 #colorBox3{
-    background-color:red;
+    background-color:blue;
     position:absolute;
     height:25%;
     width:75%;

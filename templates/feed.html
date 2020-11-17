@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+        User Feed
+    </title>
+    <link rel="stylesheet" href="../styles/feed.css"/>
+</head>
+
+<body>
+    <p>Here is your feed: {{data[0]}}</p>
+    <table>
+        {% for post in data[1:] %}
+        <tr>
+            <td>{{post[0]}}</td>
+            <td>{{post[1]}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+
+</html>

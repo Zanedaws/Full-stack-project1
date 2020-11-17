@@ -11,16 +11,16 @@
     <div id="colorBox4"></div>
     <div id="loginBox">
         <p id="signIn">Sign in</p>
-        <form>
+        <form action="/login" method="POST" id="form">
             <label for="user" id="userLabel">Username:</label>
             <input type="text" id="user" name="user" placeholder="Username">
             <label for="pass" id="passLabel">Password:</label>
-            <input type="text" id="pass" name="user" placeholder="Password">
+            <input type="password" id="pass" name="pass" placeholder="Password">
             <input type="submit" id="submit" value="submit">
         </form>
         <div id="partition">
             <div id="regBox">
-            <p id="regMsg">Don't have an account? <a href="registration.html" id="regLink">Register</a></p>
+            <p id="regMsg">Don't have an account? <a href="/register" id="regLink">Register</a></p>
             </div>
         </div>
     </div>
