@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+        Profile Page
+    </title>
+    <link rel="stylesheet" href="../styles/profile.css"/>
+</head>
+
+<body>
+    <form action={{ "/"+data[0]+"/create" }} method="GET" id="form">
+        <input id="create" type="submit" value="create"/>
+    </form>
+    <p>Profile for: {{data[1]}}</p>
+    <div id="cont">
+    <table>
+        {% for post in data[2:] %}
+        <tr>
+            <td>Likes: {{post[3]}}</td>
+            <td><b>{{post[5]}}</b></td>
+            <td>{{post[4]}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+</body>
+
+</html>

@@ -2,7 +2,7 @@
 
 import flask
 import sqlite3
-import safe_serialization
+import datetime
 
 app = flask.Flask(__name__, static_folder="styles/")
 
@@ -17,6 +17,25 @@ def login_post():
     iden = hash((user,pswd))
     return flask.redirect(flask.url_for(hash=iden, endpoint='feed_get'))
 
+@app.route("/<hash>/profile", methods=["GET"])
+def profile_get(hash):
+    conn = sqlite3.connect('data/database.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM posts WHERE userHash=?",(hash,))
+    posts = c.fetchall()
+    c.execute("SELECT * FROM users WHERE hash=?",(hash,))
+    name = c.fetchall()
+    posts.reverse()
+    posts.insert(0,name[0][0])
+    conn.close()
+    posts.insert(0, hash)
+    print(posts)
+    return flask.render_template("profile.html", data=posts)
+
+@app.route("/<user>/profile", methods=["POST"])
+def profile_post(user):
+    pass
+
 @app.route("/<hash>/feed", methods=["GET"])
 def feed_get(hash):
     user = hash;
@@ -24,11 +43,33 @@ def feed_get(hash):
     c = conn.cursor()
     c.execute("SELECT * FROM posts WHERE userHash!=?",(user,))
     posts = c.fetchall()
+    posts.reverse()
     c.execute("SELECT * FROM users WHERE hash=?",(user,))
     userInfo = c.fetchall()
+    conn.close()
     posts.insert(0,userInfo[0][0])
-    print(posts)
     return flask.render_template("feed.html", data = posts)
+
+@app.route("/<hash>/create",methods=["GET"])
+def create_get(hash):
+    return flask.render_template("create.html", data=hash)
+
+@app.route("/<user>/create",methods=["POST"])
+def create_post(user):
+    content = flask.request.form['cont']
+    title = flask.request.form['title']
+    conn = sqlite3.connect("data/database.db")
+    c = conn.cursor()
+
+    data=(int(user),hash((content,datetime.datetime.now().timestamp())),0,content,title)
+    print(data)
+    try:
+        c.execute("INSERT INTO posts (userHash, postHash, likes, content, title) VALUES (?,?,?,?,?)",data)
+    except:
+        pass
+    conn.commit()
+    conn.close()
+    return flask.redirect(flask.url_for(hash=user, endpoint="profile_get"))
 
 @app.route("/register", methods=["GET"])
 def register_get():
