@@ -1,4 +1,10 @@
 table{
-  background:black;
+  background:white;
   border:black;
+}
+
+td{
+  border-style:solid;
+  border-width:1px;
+  padding:10px;
 }

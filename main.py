@@ -1,8 +1,7 @@
-
-
 import flask
 import sqlite3
 import datetime
+import hashlib
 
 app = flask.Flask(__name__, static_folder="styles/")
 
@@ -14,41 +13,61 @@ def login_get():
 def login_post():
     user = flask.request.form['user']
     pswd = flask.request.form['pass']
-    iden = hash((user,pswd))
-    return flask.redirect(flask.url_for(hash=iden, endpoint='feed_get'))
+    iden = int(hashlib.shake_256(user.encode('utf-8')+pswd.encode('utf-8')).hexdigest(4), 16)
+    conn = sqlite3.connect("data/database.db")
+    c = conn.cursor()
+    if (c.execute("SELECT * FROM users WHERE hash=?", (iden,)).fetchall() != []): #login success
+        print(c.fetchall())
+        return flask.redirect(flask.url_for(hash=iden, endpoint='profile_get'))
+        #return flask.redirect(flask.url_for(hash=iden, endpoint='feed_get'))
+    else:
+        return flask.render_template('login.html') #login fail
 
 @app.route("/<hash>/profile", methods=["GET"])
 def profile_get(hash):
     conn = sqlite3.connect('data/database.db')
     c = conn.cursor()
-    c.execute("SELECT * FROM posts WHERE userHash=?",(hash,))
+    c.execute("SELECT * FROM posts WHERE userHash=?", (hash,))
     posts = c.fetchall()
-    c.execute("SELECT * FROM users WHERE hash=?",(hash,))
+    c.execute("SELECT * FROM users WHERE hash=?", (hash,))
     name = c.fetchall()
-    posts.reverse()
-    posts.insert(0,name[0][0])
+    posts.reverse() #reverse chronological order ( may need to adjust for pagination)
+    posts.insert(0, name[0][0])
     conn.close()
     posts.insert(0, hash)
     print(posts)
     return flask.render_template("profile.html", data=posts)
 
-@app.route("/<user>/profile", methods=["POST"])
+@app.route("/<user>/profile", methods=["POST"]) #need to implement post deletion (phase 2)
 def profile_post(user):
     pass
 
 @app.route("/<hash>/feed", methods=["GET"])
 def feed_get(hash):
-    user = hash;
+    user = hash
     conn = sqlite3.connect('data/database.db')
     c = conn.cursor()
-    c.execute("SELECT * FROM posts WHERE userHash!=?",(user,))
+    c.execute("SELECT * FROM posts WHERE userHash!=?", (user, ))
     posts = c.fetchall()
-    posts.reverse()
-    c.execute("SELECT * FROM users WHERE hash=?",(user,))
+    posts.reverse() #reverse chronological order ( may need to adjust for pagination)
+    c.execute("SELECT * FROM users WHERE hash=?", (user, ))
     userInfo = c.fetchall()
     conn.close()
-    posts.insert(0,userInfo[0][0])
-    return flask.render_template("feed.html", data = posts)
+    posts.insert(0, userInfo[0][0])
+    return flask.render_template("feed.html", data=posts)
+
+@app.route("/posts/<hash>", methods=["GET"])
+def post_get(hash):
+    post = hash
+    print(hash)
+    conn = sqlite3.connect('data/database.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM posts WHERE postHash=?", (post, )) #finds post with given postHash
+    posts = c.fetchall()
+    posts.reverse()
+    conn.close()
+    #print("\n\n\nPost\n\n\n")
+    return flask.render_template("posts.html", data=posts)
 
 @app.route("/<hash>/create",methods=["GET"])
 def create_get(hash):
@@ -60,11 +79,13 @@ def create_post(user):
     title = flask.request.form['title']
     conn = sqlite3.connect("data/database.db")
     c = conn.cursor()
-
-    data=(int(user),hash((content,datetime.datetime.now().timestamp())),0,content,title)
+    postHash = int(hashlib.shake_256(content.encode('utf-8')+title.encode('utf-8')+str(datetime.datetime.now()).encode('utf-8')).hexdigest(4),16)
+    print(postHash)
+    data = (int(user), postHash, 0, content, title)
     print(data)
     try:
-        c.execute("INSERT INTO posts (userHash, postHash, likes, content, title) VALUES (?,?,?,?,?)",data)
+        c.execute("INSERT INTO posts (userHash, postHash, likes, content, title) VALUES (?,?,?,?,?)", data)
+        #creates post
     except:
         pass
     conn.commit()
@@ -79,17 +100,19 @@ def register_get():
 def register_post():
     user = flask.request.form['user']
     pswd = flask.request.form['pass']
-    iden = hash((user,pswd))
+    iden = int(hashlib.shake_256(user.encode('utf-8')+pswd.encode('utf-8')).hexdigest(4),16)
     conn = sqlite3.connect("data/database.db")
     c = conn.cursor()
-    if(c.execute("SELECT * FROM users WHERE hash=?",(iden,)).fetchall() == []):
+    if c.execute("SELECT * FROM users WHERE hash=?", (iden,)).fetchall() == []:
         c.execute("INSERT INTO users VALUES (?,?,?)", (user, pswd, iden))
         conn.commit()
         conn.close()
-        return flask.redirect(flask.url_for(hash=iden, endpoint='feed_get'))
+        #return flask.redirect(flask.url_for(hash=iden, endpoint='feed_get'))
+        return flask.redirect(flask.url_for(hash=iden, endpoint='profile_get')) #remove phase 2
     else:
         conn.close()
-        return flask.redirect(flask.url_for(hash=iden, endpoint='feed_get'))
+        # return flask.redirect(flask.url_for(hash=iden, endpoint='feed_get'))
+        return flask.redirect(flask.url_for(hash=iden, endpoint='profile_get')) #remove phase 2
 
 if __name__ == "__main__":
     app.run(port=5001, host='127.0.0.1', debug=True, use_evalex=False)

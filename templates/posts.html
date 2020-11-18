@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>
-        {{post[5]}}
+        {{data[0][5]}}
     </title>
     <link rel="stylesheet" href="../styles/feed.css"/>
 </head>
@@ -10,10 +10,10 @@
 <body>
     <p>Here is the post</p>
     <table>
-        {% for post in data[1:] %}
+        {% for post in data %}
         <tr>
             <td>{{post[1]}}</td>
-            <td>{{post[3]}}</td>
+            <td>Likes: {{post[3]}}</td>
             <td>{{post[5]}}</td>
             <td>{{post[4]}}</td>
         </tr>
