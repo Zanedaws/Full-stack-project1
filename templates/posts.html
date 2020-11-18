@@ -2,19 +2,19 @@
 <html>
 <head>
     <title>
-        User Feed
+        {{data[0][5]}}
     </title>
     <link rel="stylesheet" href="../styles/feed.css"/>
 </head>
 
 <body>
-    <p>Here is your feed: {{data[0]}}</p>
+    <p>Here is the post</p>
     <table>
-        {% for post in data[1:] %}
+        {% for post in data %}
         <tr>
             <td>{{post[1]}}</td>
             <td>Likes: {{post[3]}}</td>
-            <td><a href="http://127.0.0.1:5001/posts/{{ post[2] }}">{{post[5]}}</a></td>
+            <td>{{post[5]}}</td>
             <td>{{post[4]}}</td>
         </tr>
         {% endfor %}
