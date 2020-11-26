@@ -18,8 +18,8 @@ def login_post():
     c = conn.cursor()
     if (c.execute("SELECT * FROM users WHERE hash=?", (iden,)).fetchall() != []): #login success
         print(c.fetchall())
-        return flask.redirect(flask.url_for(hash=iden, endpoint='profile_get'))
-        #return flask.redirect(flask.url_for(hash=iden, endpoint='feed_get'))
+        #return flask.redirect(flask.url_for(hash=iden, endpoint='profile_get'))
+        return flask.redirect(flask.url_for(hash=iden, endpoint='feed_get'))
     else:
         return flask.render_template('login.html') #login fail
 
@@ -42,6 +42,10 @@ def profile_get(hash):
 def profile_post(user):
     pass
 
+@app.route("/<posthash>/delete", methods=["POST"]) #this is currently where the delete button goes
+def post_delete(posthash):
+    pass
+
 @app.route("/<hash>/feed", methods=["GET"])
 def feed_get(hash):
     user = hash
@@ -52,14 +56,17 @@ def feed_get(hash):
     posts.reverse() #reverse chronological order ( may need to adjust for pagination)
     c.execute("SELECT * FROM users WHERE hash=?", (user, ))
     userInfo = c.fetchall()
+    print(userInfo)
     conn.close()
     posts.insert(0, userInfo[0][0])
+    posts.insert(1, userInfo[0][2])
     return flask.render_template("feed.html", data=posts)
 
-@app.route("/posts/<hash>", methods=["GET"])
-def post_get(hash):
-    post = hash
-    print(hash)
+@app.route("/<userhash>/posts/<posthash>", methods=["GET"]) #added userhash for voting tracking
+def post_get(userhash, posthash):
+    post = posthash
+    user = userhash
+    print(posthash)
     conn = sqlite3.connect('data/database.db')
     c = conn.cursor()
     c.execute("SELECT * FROM posts WHERE postHash=?", (post, )) #finds post with given postHash
@@ -67,6 +74,7 @@ def post_get(hash):
     posts.reverse()
     conn.close()
     #print("\n\n\nPost\n\n\n")
+    posts.insert(0, user)
     return flask.render_template("posts.html", data=posts)
 
 @app.route("/<hash>/create",methods=["GET"])
@@ -107,12 +115,12 @@ def register_post():
         c.execute("INSERT INTO users VALUES (?,?,?)", (user, pswd, iden))
         conn.commit()
         conn.close()
-        #return flask.redirect(flask.url_for(hash=iden, endpoint='feed_get'))
-        return flask.redirect(flask.url_for(hash=iden, endpoint='profile_get')) #remove phase 2
+        return flask.redirect(flask.url_for(hash=iden, endpoint='feed_get'))
+        #return flask.redirect(flask.url_for(hash=iden, endpoint='profile_get')) #remove phase 2
     else:
         conn.close()
-        # return flask.redirect(flask.url_for(hash=iden, endpoint='feed_get'))
-        return flask.redirect(flask.url_for(hash=iden, endpoint='profile_get')) #remove phase 2
+        return flask.redirect(flask.url_for(hash=iden, endpoint='feed_get'))
+        #return flask.redirect(flask.url_for(hash=iden, endpoint='profile_get')) #remove phase 2
 
 if __name__ == "__main__":
     app.run(port=5001, host='127.0.0.1', debug=True, use_evalex=False)
