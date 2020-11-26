@@ -36,7 +36,7 @@ def profile_get(hash):
     conn.close()
     posts.insert(0, hash)
     print(posts)
-    return flask.render_template("profile.html", data=posts)
+    return flask.render_template("profilecards.html", data=posts)
 
 @app.route("/<user>/profile", methods=["POST"]) #need to implement post deletion (phase 2)
 def profile_post(user):
