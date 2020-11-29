@@ -94,8 +94,11 @@ def feed_get(hash):
     userInfo = c.fetchall()
     print(userInfo)
     conn.close()
+    numPages = math.ceil((len(posts)-1)/5);
     posts.insert(0, userInfo[0][0])
     posts.insert(1, userInfo[0][2])
+    posts.insert(0, numPages)
+    print(posts)
     return flask.render_template("feed.html", data=posts)
 
 @app.route("/<userhash>/posts/<posthash>", methods=["GET"]) #added userhash for voting tracking

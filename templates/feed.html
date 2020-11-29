@@ -5,21 +5,32 @@
         User Feed
     </title>
     <link rel="stylesheet" href="../styles/feed.css"/>
+    <script src="https://code.jquery.com/jquery-git.js"></script>
+    <script src="../scripts/pagination.js"></script>
 </head>
 
 <body>
-<a href="http://127.0.0.1:5001/{{data[1]}}/feed"><img src={{ url_for('static', filename='data/banana.png') }}/></a>
-    <p>Here is your feed: <a href="http://127.0.0.1:5001/{{ data[1] }}/profile">{{data[0]}}</a></p>
-    <table>
-        {% for post in data[2:] %}
-        <tr>
-            <td>{{post[1]}}</td>
-            <td>Likes: {{post[3]}}</td>
-            <td><a href="http://127.0.0.1:5001/{{ data[1] }}/posts/{{ post[2] }}">{{post[5]}}</a></td>
-            <td>{{post[4]}}</td>
-        </tr>
-        {% endfor %}
-    </table>
+<a href="http://127.0.0.1:5001/{{data[2]}}/feed"><img src={{ url_for('static', filename='data/banana.png') }}/></a>
+    <p id = "here">Here is your feed: <a href="http://127.0.0.1:5001/{{ data[2] }}/profile">{{data[1]}}</a></p>
+    {% for post in data[3:] %}
+    <div class="card" id="{{ post[2] }}">
+        <div class="container">
+            <h3><a href="http://127.0.0.1:5001/{{data[2]}}/posts/{{post[2]}}"><b>{{post[5]}}</b></a></h3>
+            <hr>
+            <p>{{post[4]}}</p>
+            <p>
+                <small>{{post[1]}}</small>
+            </p>
+        </div>
+    </div>
+    {% endfor %}
+    <div id = "pagination">
+        {% if data[0]|int > 1 %}
+            {% for i in range(data[0]|int) %}
+            <button type="button" id={{i}} class="pageButton">{{i}}</button>
+            {% endfor %}
+        {% endif %}
+    </div>
 </body>
 
 </html>
