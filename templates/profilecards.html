@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>
+        Profile Page
+    </title>
+    <link rel="stylesheet" href="../styles/profile.css"/>
+</head>
+<body>
+    <form action={{ "/"+data[0]+"/create" }} method="GET" id="form">
+        <input id="create" type="submit" value="create"/>
+    </form>
+    <p>Profile for: {{data[1]}}</p>
+
+    {% for post in data[2:] %}
+    <div class="card" id="{{ data[2][2] }}">
+        <div class="container">
+            <h3><a href="http://127.0.0.1:5001/{{ data[0] }}/posts/{{ post[2] }}"><b>{{post[5]}}</b></a></h3>
+            <hr></hr>
+            <p>{{ post[4] }}</p>
+            <p><small>{{ post[1] }}</small><form action=/{{post[2]}}/delete method="GET" id="form">
+            <input id="delete" type="submit" value="delete"/>
+            </form></p>
+        </div>
+    </div>
+    {% endfor %}
+</body>
+</html>

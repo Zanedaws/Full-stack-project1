@@ -8,13 +8,13 @@
 </head>
 
 <body>
-    <p>Here is your feed: {{data[0]}}</p>
+    <p>Here is your feed: <a href="http://127.0.0.1:5001/{{ data[1] }}/profile">{{data[0]}}</a></p>
     <table>
-        {% for post in data[1:] %}
+        {% for post in data[2:] %}
         <tr>
             <td>{{post[1]}}</td>
             <td>Likes: {{post[3]}}</td>
-            <td><a href="http://127.0.0.1:5001/posts/{{ post[2] }}">{{post[5]}}</a></td>
+            <td><a href="http://127.0.0.1:5001/{{ data[1] }}/posts/{{ post[2] }}">{{post[5]}}</a></td>
             <td>{{post[4]}}</td>
         </tr>
         {% endfor %}

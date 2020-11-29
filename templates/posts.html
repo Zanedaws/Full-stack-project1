@@ -2,23 +2,26 @@
 <html>
 <head>
     <title>
-        {{data[0][5]}}
+        {{data[1][5]}}
     </title>
-    <link rel="stylesheet" href="../styles/feed.css"/>
+    <link rel="stylesheet" href="../styles/profile.css"/>
 </head>
 
 <body>
     <p>Here is the post</p>
-    <table>
-        {% for post in data %}
-        <tr>
-            <td>{{post[1]}}</td>
-            <td>Likes: {{post[3]}}</td>
-            <td>{{post[5]}}</td>
-            <td>{{post[4]}}</td>
-        </tr>
+        {% for post in data[1:] %}
+        <div class="card" id="{{ post[2] }}">
+            <div class="container">
+                <h3><a href="http://127.0.0.1:5001/{{ data[0] }}/posts/{{ post[2] }}"><b>{{post[5]}}</b></a></h3>
+                <hr></hr>
+                <p>{{ post[4] }}</p>
+                <p><small>{{ post[1] }}</small><form action=/{{post[2]}}/delete method="GET" id="form">
+                                                <input id="delete" type="submit" value="delete"/>
+                                                </form></p>
+            </div>
+        </div>
         {% endfor %}
-    </table>
+
 </body>
 
 </html>
