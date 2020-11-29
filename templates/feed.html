@@ -8,6 +8,7 @@
 </head>
 
 <body>
+<a href="http://127.0.0.1:5001/{{data[1]}}/feed"><img src={{ url_for('static', filename='data/banana.png') }}/></a>
     <p>Here is your feed: <a href="http://127.0.0.1:5001/{{ data[1] }}/profile">{{data[0]}}</a></p>
     <table>
         {% for post in data[2:] %}

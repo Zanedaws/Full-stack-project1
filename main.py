@@ -2,8 +2,9 @@ import flask
 import sqlite3
 import datetime
 import hashlib
+import math
 
-app = flask.Flask(__name__, static_folder="styles/")
+app = flask.Flask(__name__, static_folder="")
 
 @app.route("/login", methods=["GET"])
 def login_get():
@@ -25,6 +26,30 @@ def login_post():
         return flask.render_template('login.html') #login fail
 
 
+@app.route("/<hash>/<numPages>/<page>", methods=["GET"])
+def page_get(hash, numPages, page):
+    page = int(page);
+    conn = sqlite3.connect('data/database.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM posts WHERE userHash=?", (hash,))
+    posts = c.fetchall();
+    posts.reverse()
+    if page > 0:
+        start = (page) * 5;
+    else:
+        start = 0
+    print(start)
+    print(start+6)
+    posts = posts[start:start + 6]
+    c.execute("SELECT * FROM users WHERE hash=?", (hash,))
+    name = c.fetchall()
+    posts.insert(0, name[0][0])
+    conn.close()
+    posts.insert(0,numPages)
+    posts.insert(0,hash)
+    print(posts)
+    return flask.render_template("profilecards.html", data=posts)
+
 @app.route("/<hash>/profile", methods=["GET"])
 def profile_get(hash):
     conn = sqlite3.connect('data/database.db')
@@ -36,6 +61,10 @@ def profile_get(hash):
     posts.reverse() #reverse chronological order ( may need to adjust for pagination)
     posts.insert(0, name[0][0])
     conn.close()
+
+    numPages = math.ceil((len(posts)-1)/5);
+
+    posts.insert(0, numPages)
     posts.insert(0, hash)
     print(posts)
     return flask.render_template("profilecards.html", data=posts)
@@ -46,7 +75,12 @@ def profile_post(user):
 
 @app.route("/<posthash>/delete", methods=["POST"]) #this is currently where the delete button goes
 def post_delete(posthash):
-    pass
+    conn = sqlite3.connect('data/database.db')
+    c = conn.cursor()
+    c.execute("DELETE FROM posts WHERE postHash=?", (posthash,))
+    conn.commit()
+    conn.close()
+    return '', 204
 
 @app.route("/<hash>/feed", methods=["GET"])
 def feed_get(hash):
@@ -115,6 +149,7 @@ def register_post():
     iden = int(hashlib.shake_256(user.encode('utf-8')+pswd.encode('utf-8')).hexdigest(4),16)
     conn = sqlite3.connect("data/database.db")
     c = conn.cursor()
+    print(iden)
     if c.execute("SELECT * FROM users WHERE hash=?", (iden,)).fetchall() == []:
         c.execute("INSERT INTO users VALUES (?,?,?)", (user, pswd, iden))
         conn.commit()

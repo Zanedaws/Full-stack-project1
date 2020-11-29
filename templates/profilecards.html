@@ -4,25 +4,38 @@
     <title>
         Profile Page
     </title>
-    <link rel="stylesheet" href="../styles/profile.css"/>
+    <link rel="stylesheet" href={{ url_for('static', filename='styles/profile.css') }}/>
+    <script src="https://code.jquery.com/jquery-git.js"></script>
+    <script src="../scripts/deletePost.js"></script>
+    <script src="../scripts/pagination.js"></script>
 </head>
 <body>
     <form action={{ "/"+data[0]+"/create" }} method="GET" id="form">
         <input id="create" type="submit" value="create"/>
     </form>
-    <p>Profile for: {{data[1]}}</p>
+    <p>Profile for: {{data[2]}}</p>
 
-    {% for post in data[2:] %}
-    <div class="card" id="{{ data[2][2] }}">
+    {% for post in data[3:] %}
+    <div class="card" id="{{ post[2] }}">
         <div class="container">
+            <form action=/{{post[2]}}/delete method="POST" id="form">
+                <input class="delete" type="button" value="delete" id={{post[2]}}/>
+            </form>
             <h3><a href="http://127.0.0.1:5001/{{ data[0] }}/posts/{{ post[2] }}"><b>{{post[5]}}</b></a></h3>
             <hr></hr>
             <p>{{ post[4] }}</p>
-            <p><small>{{ post[1] }}</small><form action=/{{post[2]}}/delete method="GET" id="form">
-            <input id="delete" type="submit" value="delete"/>
-            </form></p>
+            <p>
+                <small>{{ post[1] }}</small>
+            </p>
         </div>
     </div>
     {% endfor %}
+    <div id = "pagination">
+        {% if data[1]|int > 1 %}
+            {% for i in range(data[1]|int) %}
+            <button type="button" id={{i}} class="pageButton">{{i}}</button>
+            {% endfor %}
+        {% endif %}
+    </div>
 </body>
 </html>
