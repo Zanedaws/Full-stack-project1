@@ -91,17 +91,47 @@ def profile_get(hash):
     c.execute("SELECT * FROM users WHERE hash=?", (hash,))
     name = c.fetchall()
     posts.reverse() #reverse chronological order ( may need to adjust for pagination)
-    posts.insert(0, name[0][0])
     conn.close()
 
-    numPages = math.ceil((len(posts)-1)/5)
+    curTime = str(datetime.datetime.now())
+    print(curTime)
+    yc = int(curTime[0:4]) * 8760 * 60
+    mc = int(curTime[5:7]) * 730 * 60
+    dc = int(curTime[8:10]) * 24 * 60
+    hc = int(curTime[11:13]) * 60
+    minc = int(curTime[14:16])
+    cur = yc + mc + dc + hc + minc #generates the current minutes passed since 0 AD
 
-    posts.insert(0, numPages)
-    posts.insert(0, hash)
+    postTime = []
+    for post in posts:
+        postTime.append(post[1])
+
+    ptime = []
+    ftime = []
+    for time in postTime:
+        y = int(time[0:4]) * 8760 * 60
+        m = int(time[5:7]) * 730 * 60
+        d = int(time[8:10]) * 24 * 60
+        h = int(time[11:13]) * 60
+        min = int(time[14:16])
+        ptime = y + m + d + h + min #generates post time
+        ftime.append(str(round(((cur - ptime) / 60) * 2) / 2) + " Hours Ago") #collects difference between post and current
+    #print(ftime)
+
+    final = []
+    for i in range(len(posts)):
+        hold = (posts[i][0], ftime[i], posts[i][2], posts[i][3], posts[i][4], posts[i][5])
+        final.append(hold) #reconstructs the page data with the time calculation
+
+    numPages = math.ceil((len(final)-1)/5)
+
+    final.insert(0, name[0][0])
+    final.insert(0, numPages)
+    final.insert(0, hash)
     #print(posts)
-    return flask.render_template("profilecards.html", data=posts)
+    return flask.render_template("profilecards.html", data=final)
 
-@app.route("/<user>/profile", methods=["POST"]) #need to implement post deletion (phase 2)
+@app.route("/<user>/profile", methods=["POST"])
 def profile_post(user):
     pass
 
@@ -123,16 +153,48 @@ def feed_get(hash):
     c.execute("SELECT * FROM posts WHERE userHash!=?", (user, ))
     posts = c.fetchall()
     posts.reverse() #reverse chronological order ( may need to adjust for pagination)
+
+    curTime = str(datetime.datetime.now())
+    print(curTime)
+    yc = int(curTime[0:4]) * 8760 * 60
+    mc = int(curTime[5:7]) * 730 * 60
+    dc = int(curTime[8:10]) * 24 * 60
+    hc = int(curTime[11:13]) * 60
+    minc = int(curTime[14:16])
+    cur = yc + mc + dc + hc + minc  # generates the current minutes passed since 0 AD
+
+    postTime = []
+    for post in posts:
+        postTime.append(post[1])
+
+    ptime = []
+    ftime = []
+    for time in postTime:
+        y = int(time[0:4]) * 8760 * 60
+        m = int(time[5:7]) * 730 * 60
+        d = int(time[8:10]) * 24 * 60
+        h = int(time[11:13]) * 60
+        min = int(time[14:16])
+        ptime = y + m + d + h + min  # generates post time
+        ftime.append(str(round(((cur - ptime) / 60) * 2) / 2) + " Hours Ago")  # collects difference between post and current
+    # print(ftime)
+
+    final = []
+    for i in range(len(posts)):
+        hold = (posts[i][0], ftime[i], posts[i][2], posts[i][3], posts[i][4], posts[i][5])
+        final.append(hold)  # reconstructs the page data with the time calculation
+
+
     c.execute("SELECT * FROM users WHERE hash=?", (user, ))
     userInfo = c.fetchall()
     print(userInfo)
     conn.close()
     numPages = math.ceil((len(posts)-1)/5)
-    posts.insert(0, userInfo[0][0])
-    posts.insert(1, userInfo[0][2])
-    posts.insert(0, numPages)
-    print(posts)
-    return flask.render_template("feed.html", data=posts)
+    final.insert(0, userInfo[0][0])
+    final.insert(1, userInfo[0][2])
+    final.insert(0, numPages)
+    print(final)
+    return flask.render_template("feed.html", data=final)
 
 @app.route("/posts/<userhash>/<posthash>", methods=["GET"]) #added userhash for voting tracking
 def post_get(userhash, posthash):
@@ -146,8 +208,38 @@ def post_get(userhash, posthash):
     posts.reverse()
     conn.close()
     #print("\n\n\nPost\n\n\n")
-    posts.insert(0, user)
-    return flask.render_template("posts.html", data=posts)
+
+    curTime = str(datetime.datetime.now())
+    print(curTime)
+    yc = int(curTime[0:4]) * 8760 * 60
+    mc = int(curTime[5:7]) * 730 * 60
+    dc = int(curTime[8:10]) * 24 * 60
+    hc = int(curTime[11:13]) * 60
+    minc = int(curTime[14:16])
+    cur = yc + mc + dc + hc + minc
+    postTime = []
+    for post in posts:
+        postTime.append(post[1])
+
+    ptime = []
+    ftime = []
+    for time in postTime:
+        y = int(time[0:4]) * 8760 * 60
+        m = int(time[5:7]) * 730 * 60
+        d = int(time[8:10]) * 24 * 60
+        h = int(time[11:13]) * 60
+        min = int(time[14:16])
+        ptime = y + m + d + h + min
+        ftime.append(str(round(((cur - ptime) / 60) * 2) / 2) + " Hours Ago")
+    print(ftime)
+
+    final = []
+    for i in range(len(posts)):
+        hold = (posts[i][0], ftime[i], posts[i][2], posts[i][3], posts[i][4], posts[i][5])
+        final.append(hold)
+
+    final.insert(0, user)
+    return flask.render_template("posts.html", data=final)
 
 @app.route("/<hash>/create",methods=["GET"])
 def create_get(hash):
