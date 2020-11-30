@@ -26,6 +26,7 @@ def login_post():
         return flask.render_template('login.html') #login fail
 
 
+
 @app.route("/<userHash>/votes", methods=["GET"])
 def votes_get(userHash):
     conn = sqlite3.connect('data/database.db')
@@ -43,6 +44,7 @@ def votes_post(userHash, postHash, typeVote):
     c.execute("INSERT INTO likes VALUES (?,?,?)",(userHash,postHash,typeVote,))
     if(typeVote == "up"):
         c.execute("UPDATE posts SET likes=likes+1 WHERE postHash=?",(postHash,))
+
     else:
         c.execute("UPDATE posts SET likes=likes-1 WHERE postHash=?",(postHash,))
     conn.commit()
@@ -88,7 +90,7 @@ def profile_get(hash):
 
     posts.insert(0, numPages)
     posts.insert(0, hash)
-    print(posts)
+    #print(posts)
     return flask.render_template("profilecards.html", data=posts)
 
 @app.route("/<user>/profile", methods=["POST"]) #need to implement post deletion (phase 2)
