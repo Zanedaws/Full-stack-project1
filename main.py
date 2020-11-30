@@ -26,29 +26,51 @@ def login_post():
         return flask.render_template('login.html') #login fail
 
 
-@app.route("/<hash>/<numPages>/<page>", methods=["GET"])
-def page_get(hash, numPages, page):
-    page = int(page);
+@app.route("/<userHash>/votes", methods=["GET"])
+def votes_get(userHash):
     conn = sqlite3.connect('data/database.db')
     c = conn.cursor()
-    c.execute("SELECT * FROM posts WHERE userHash=?", (hash,))
-    posts = c.fetchall();
-    posts.reverse()
-    if page > 0:
-        start = (page) * 5;
+    c.execute("SELECT * FROM likes")
+    votes = c.fetchall()
+    c.close()
+    return {"votes":votes}, 200
+
+@app.route("/<userHash>/<postHash>/<typeVote>/votes", methods=["POST"])
+def votes_post(userHash, postHash, typeVote):
+    print("here")
+    conn = sqlite3.connect('data/database.db')
+    c = conn.cursor()
+    c.execute("INSERT INTO likes VALUES (?,?,?)",(userHash,postHash,typeVote,))
+    if(typeVote == "up"):
+        c.execute("UPDATE posts SET likes=likes+1 WHERE postHash=?",(postHash,))
     else:
-        start = 0
-    print(start)
-    print(start+6)
-    posts = posts[start:start + 6]
-    c.execute("SELECT * FROM users WHERE hash=?", (hash,))
-    name = c.fetchall()
-    posts.insert(0, name[0][0])
+        c.execute("UPDATE posts SET likes=likes-1 WHERE postHash=?",(postHash,))
+    conn.commit()
     conn.close()
-    posts.insert(0,numPages)
-    posts.insert(0,hash)
-    print(posts)
-    return flask.render_template("profilecards.html", data=posts)
+    return '', 204
+# @app.route("/<hash>/<numPages>/<page>", methods=["GET"])
+# def page_get(hash, numPages, page):
+#     page = int(page);
+#     conn = sqlite3.connect('data/database.db')
+#     c = conn.cursor()
+#     c.execute("SELECT * FROM posts WHERE userHash=?", (hash,))
+#     posts = c.fetchall();
+#     posts.reverse()
+#     if page > 0:
+#         start = (page) * 5;
+#     else:
+#         start = 0
+#     print(start)
+#     print(start+6)
+#     posts = posts[start:start + 6]
+#     c.execute("SELECT * FROM users WHERE hash=?", (hash,))
+#     name = c.fetchall()
+#     posts.insert(0, name[0][0])
+#     conn.close()
+#     posts.insert(0,numPages)
+#     posts.insert(0,hash)
+#     print(posts)
+#     return flask.render_template("profilecards.html", data=posts)
 
 @app.route("/<hash>/profile", methods=["GET"])
 def profile_get(hash):
@@ -62,7 +84,7 @@ def profile_get(hash):
     posts.insert(0, name[0][0])
     conn.close()
 
-    numPages = math.ceil((len(posts)-1)/5);
+    numPages = math.ceil((len(posts)-1)/5)
 
     posts.insert(0, numPages)
     posts.insert(0, hash)
@@ -94,7 +116,7 @@ def feed_get(hash):
     userInfo = c.fetchall()
     print(userInfo)
     conn.close()
-    numPages = math.ceil((len(posts)-1)/5);
+    numPages = math.ceil((len(posts)-1)/5)
     posts.insert(0, userInfo[0][0])
     posts.insert(1, userInfo[0][2])
     posts.insert(0, numPages)
