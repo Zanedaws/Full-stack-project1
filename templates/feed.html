@@ -11,8 +11,8 @@
 </head>
 
 <body>
-<a href="http://127.0.0.1:5001/{{data[2]}}/feed"><img src={{ url_for('static', filename='data/banana.png') }}/></a>
-    <p id = "here">Here is your feed: <a href="http://127.0.0.1:5001/{{ data[2] }}/profile">{{data[1]}}</a></p>
+<a href="/{{data[2]}}/feed"><img src={{ url_for('static', filename='data/banana.png') }}/></a>
+    <p id = "here">Here is your feed: <a href="/{{ data[2] }}/profile">{{data[1]}}</a></p>
     {% for post in data[3:] %}
     <div class="card" id="{{ post[2] }}">
         <div id="buttonContainer">
@@ -21,7 +21,7 @@
             <button type="button" class="likeButton" id="down">Dis</button>
         </div>
         <div class="container">
-            <h3><a href="http://127.0.0.1:5001/{{data[2]}}/posts/{{post[2]}}"><b>{{post[5]}}</b></a></h3>
+            <h3><a href="/posts/{{data[2]}}/{{post[2]}}"><b>{{post[5]}}</b></a></h3>
             <hr>
             <p>{{post[4]}}</p>
             <p>
@@ -39,5 +39,4 @@
         {% endif %}
     </div>
 </body>
-
 </html>

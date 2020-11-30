@@ -4,15 +4,22 @@
     <title>
         {{data[1][5]}}
     </title>
-    <link rel="stylesheet" href={{ url_for('static', filename='styles/profile.css') }}/>
+    <link rel="stylesheet" href={{url_for('static', filename="../styles/profile.css")}}/>
+    <script src="https://code.jquery.com/jquery-git.js"></script>
+    <script src="../../scripts/voting.js"></script>
 </head>
 
 <body>
     <p>Here is the post</p>
         {% for post in data[1:] %}
         <div class="card" id="{{ post[2] }}">
+            <div id="buttonContainer">
+                <button type="button" class="likeButton" id="up">Like</button>
+                <p class="likes">0</p>
+                <button type="button" class="likeButton" id="down">Dis</button>
+            </div>
             <div class="container">
-                <h3><a href="http://127.0.0.1:5001/{{ data[0] }}/posts/{{ post[2] }}"><b>{{post[5]}}</b></a></h3>
+                <h3><a href="http://127.0.0.1:5001/posts/{{ data[0] }}/{{ post[2] }}"><b>{{post[5]}}</b></a></h3>
                 <hr></hr>
                 <p>{{ post[4] }}</p>
                 <p><small>{{ post[1] }}</small>

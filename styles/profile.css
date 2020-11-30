@@ -1,3 +1,38 @@
+#buttonContainer{
+  position:absolute;
+  height:125px;
+  width:60px;
+}
+
+.likes{
+  position:absolute;
+  top:37px;
+  margin-left:5px;
+}
+
+#up{
+  position:absolute;
+  top: :0px;
+  width:60px;
+  padding:0px;
+  height:.5in;
+  text-align:center;
+  margin:auto;
+}
+
+#down{
+  position:absolute;
+  width:60px;
+  padding:0px;
+  bottom:0px;
+  height:.5in;
+}
+
+img{
+  height:100px;
+  width:100px;
+}
+
 #pagination{
   margin-top:10px;
 }
@@ -5,11 +40,6 @@
 .delete{
   float:right;
   
-}
-
-img{
-  height:100px;
-  width:100px;
 }
 
 #create{
@@ -33,11 +63,17 @@ td{
   padding:10px;
 }
 
+#buttonContainer{
+  position:absolute;
+  height:125px;
+  width:60px;
+}
+
 .card {
+  position:relative;
   /* Add shadows to create the "card" effect */
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   transition: 0.3s;
-  padding: 4px 16px;
 }
 
 /* On mouse-over, add a deeper shadow */
@@ -48,4 +84,5 @@ td{
 /* Add some padding inside the card container */
 .container {
   padding: 4px 16px;
+  margin-left:50px;
 }

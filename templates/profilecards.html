@@ -8,6 +8,7 @@
     <script src="https://code.jquery.com/jquery-git.js"></script>
     <script src="../scripts/deletePost.js"></script>
     <script src="../scripts/pagination.js"></script>
+    <script src="../scripts/voting.js"></script>
 </head>
 <body>
     <a href="http://127.0.0.1:5001/{{data[0]}}/feed"><img src={{ url_for('static', filename='data/banana.png') }}/></a>
@@ -20,11 +21,16 @@
     {% for post in data[3:] %}
     <p></p>
     <div class="card" id="{{ post[2] }}">
+        <div id="buttonContainer">
+            <button type="button" class="likeButton" id="up">Like</button>
+            <p class="likes">0</p>
+            <button type="button" class="likeButton" id="down">Dis</button>
+        </div>
         <div class="container">
             <form action=/{{post[2]}}/delete method="POST" id="form">
                 <input class="delete" type="button" value="delete" id={{post[2]}}/>
             </form>
-            <h3><a href="http://127.0.0.1:5001/{{ data[0] }}/posts/{{ post[2] }}"><b>{{post[5]}}</b></a></h3>
+            <h3><a href="http://127.0.0.1:5001/posts/{{ data[0] }}/{{ post[2] }}"><b>{{post[5]}}</b></a></h3>
             <hr></hr>
             <p>{{ post[4] }}</p>
             <p>

@@ -34,13 +34,21 @@ def votes_get(userHash):
     c.execute("SELECT * FROM likes")
     votes = c.fetchall()
     c.close()
-    return {"votes":votes}, 200
+    curVal = 0;
+    for vote in votes:
+        if vote[2] == "up":
+            curVal += 1;
+        else:
+            curVal -= 1;
+    return {"votes":votes, "curVal":curVal}, 200
 
 @app.route("/<userHash>/<postHash>/<typeVote>/votes", methods=["POST"])
 def votes_post(userHash, postHash, typeVote):
-    print("here")
     conn = sqlite3.connect('data/database.db')
     c = conn.cursor()
+
+    c.execute("DELETE FROM likes WHERE userHash=? AND postHash=?",(userHash, postHash,))
+
     c.execute("INSERT INTO likes VALUES (?,?,?)",(userHash,postHash,typeVote,))
     if(typeVote == "up"):
         c.execute("UPDATE posts SET likes=likes+1 WHERE postHash=?",(postHash,))
@@ -101,6 +109,7 @@ def profile_post(user):
 def post_delete(posthash):
     conn = sqlite3.connect('data/database.db')
     c = conn.cursor()
+    c.execute("DELETE FROM likes WHERE postHash=?", (posthash,))
     c.execute("DELETE FROM posts WHERE postHash=?", (posthash,))
     conn.commit()
     conn.close()
@@ -125,7 +134,7 @@ def feed_get(hash):
     print(posts)
     return flask.render_template("feed.html", data=posts)
 
-@app.route("/<userhash>/posts/<posthash>", methods=["GET"]) #added userhash for voting tracking
+@app.route("/posts/<userhash>/<posthash>", methods=["GET"]) #added userhash for voting tracking
 def post_get(userhash, posthash):
     post = posthash
     user = userhash

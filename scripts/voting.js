@@ -38,7 +38,17 @@ $(document).ready(function(){
         {
             if(window.location.pathname.split("/")[1] == votes[i][0])
                 if(div.id == votes[i][1])
-                    return;
+                    if((this.id == "up" && votes[i][2] == "up") || (this.id == "down" && votes[i][2] == "down"))
+                        return;
+                    else
+                    {
+                        let curVal = parseInt($("#"+div.id).children("#buttonContainer").children(".likes").html());
+                        if(this.id == "up")
+                            curVal++;
+                        else
+                            curVal--;
+                        $("#"+div.id).children("#buttonContainer").children(".likes").html(curVal);
+                    }
         }
         $.post("/"+window.location.pathname.split("/")[1]+"/"+div.id+"/"+this.id+"/votes");
         let curVal = parseInt($("#"+div.id).children("#buttonContainer").children(".likes").html());
