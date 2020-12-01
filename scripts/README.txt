@@ -33,6 +33,12 @@ APIs:
         Uses the entered data to create a hash unique to said user. If someone
         tries to register with a prexisting username and password, they are
         instead logged in.
+    votes_get:
+        Loads the data for the posts' likes/dislikes on a given page.
+    votes_post:
+        Whenever a new like/dislike is created, the API scrubs the previous
+        row of that like/dislike if it exists, recreates it, and then fills
+        the like/dislike column with the correct type.
 
 Schema:
     Foreign keys are enabled
@@ -56,3 +62,10 @@ Schema:
             contains the body of the post
         title:
             contains the title of the post
+    likes:
+        userhash (foreign referencing users->hash):
+            the hash of the user that is viewing the post when it is liked/disliked
+        posthash:
+            unique post hash created from content of post and time of creation
+        type:
+            upvote or downvote From specific user on specific post
