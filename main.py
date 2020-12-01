@@ -125,7 +125,7 @@ def profile_get(hash):
         hold = (posts[i][0], ftime[i], posts[i][2], posts[i][3], posts[i][4], posts[i][5])
         final.append(hold) #reconstructs the page data with the time calculation
 
-    numPages = math.ceil((len(final)-1)/5)
+    numPages = math.ceil((len(final))/5)
 
     final.insert(0, name[0][0])
     final.insert(0, numPages)
@@ -191,7 +191,7 @@ def feed_get(hash):
     userInfo = c.fetchall()
     print(userInfo)
     conn.close()
-    numPages = math.ceil((len(posts)-1)/5)
+    numPages = math.ceil((len(posts))/5)
     final.insert(0, userInfo[0][0])
     final.insert(1, userInfo[0][2])
     final.insert(0, numPages)

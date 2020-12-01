@@ -83,4 +83,41 @@ $(document).ready(function(){
         }
 
     });
+
+
+//    $(".likeButton").click(function(){
+//
+//        let div = $(this).parents("div")[1];
+//        var i;
+//        for(i = 0; i < votes.length; i++)
+//        {
+//            if(window.location.pathname.split("/")[1] == votes[i][0])
+//                if(div.id == votes[i][1])
+//                    if((this.id == "up" && votes[i][2] == "up") || (this.id == "down" && votes[i][2] == "down"))
+//                    {
+//                        console.log(this.id);
+//                        console.log(votes[i][2]);
+//                        return;
+//                    }
+//                    else
+//                    {
+//                        let curVal = parseInt($("#"+div.id).children("#buttonContainer").children(".likes").html());
+//                        if(this.id == "up")
+//                            curVal++;
+//                        else
+//                            curVal--;
+//                        $("#"+div.id).children("#buttonContainer").children(".likes").html(curVal);
+//                    }
+//        }
+//        $.post("/"+window.location.pathname.split("/")[1]+"/"+div.id+"/"+this.id+"/votes");
+//        let curVal = parseInt($("#"+div.id).children("#buttonContainer").children(".likes").html());
+//        if(this.id == "up")
+//            curVal++;
+//        else
+//            curVal--;
+//        $("#"+div.id).children("#buttonContainer").children(".likes").html(curVal);
+//        $.get("/"+window.location.pathname.split("/")[1]+"/votes", function(data){
+//            votes = (data.votes);
+//        });
+//    });
 });

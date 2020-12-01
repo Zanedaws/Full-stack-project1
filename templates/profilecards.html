@@ -43,7 +43,7 @@
     <div id = "pagination">
         {% if data[1]|int > 1 %}
             {% for i in range(data[1]|int) %}
-            <button type="button" id={{i}} class="pageButton">{{i}}</button>
+            <button type="button" id={{i}} class="pageButton">{{i + 1}}</button>
             {% endfor %}
         {% endif %}
     </div>
