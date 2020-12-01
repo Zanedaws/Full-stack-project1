@@ -44,6 +44,8 @@ def votes_get(userHash):
 
 @app.route("/<userHash>/<postHash>/<typeVote>/votes", methods=["POST"])
 def votes_post(userHash, postHash, typeVote):
+    print(userHash, postHash, typeVote)
+
     conn = sqlite3.connect('data/database.db')
     c = conn.cursor()
 
@@ -196,7 +198,7 @@ def feed_get(hash):
     print(final)
     return flask.render_template("feed.html", data=final)
 
-@app.route("/posts/<userhash>/<posthash>", methods=["GET"]) #added userhash for voting tracking
+@app.route("/<userhash>/posts/<posthash>", methods=["GET"]) #added userhash for voting tracking
 def post_get(userhash, posthash):
     post = posthash
     user = userhash
