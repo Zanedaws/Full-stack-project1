@@ -1,0 +1,135 @@
+#loginBox {
+    height:60%;
+    width:25%;
+    min-width:2in;
+    background: white;
+    position: absolute;
+    top:20%;
+    left:15%;
+    box-shadow: 0px 0px 10px rgba(128,128,128,0.5);
+    border-radius: 5px;
+}
+
+#user{
+    position:absolute;
+    top: 35%;
+    left:8%;
+    width: 80%;
+}
+
+#pass{
+    position:absolute;
+    top: 50%;
+    left:8%;
+    width: 80%;
+}
+
+#signIn{
+    position:absolute;
+    top: 10%;
+    left: 8%;
+}
+
+#userLabel{
+    position:absolute;
+    top:30%;
+    left:8%;
+}
+
+#passLabel{
+    position:absolute;
+    top:45%;
+    left:8%;
+}
+
+#partition{
+    position:absolute;
+    bottom:0%;
+    width:100%;
+    height:20%;
+    border-top-color:gray;
+    border-top-style:solid;
+    border-top-width:1px;
+    background-color:lightgrey;
+    border-radius:5px;
+}
+
+#regMsg{
+    position:relative;
+    text-align:center;
+    vertical-align:center;
+}
+
+#regBox{
+    position:absolute;
+    height:50%;
+    top:25%;
+    width:100%;
+}
+
+#colorBox1{
+    background:red;
+    position:absolute;
+    height:75%;
+    width:25%;
+    bottom:0%;
+    left:0%;
+}
+
+#colorBox2{
+    background:purple;
+    position:absolute;
+    height:25%;
+    width:25%;
+    top:0%;
+    left:0%;
+}
+
+#colorBox3{
+    background-color:blue;
+    position:absolute;
+    height:25%;
+    width:75%;
+    right:0%;
+    top:0%;
+}
+
+#colorBox4{
+    background-color: rgba(128,128,128,0.5);
+    position:absolute;
+    height:75%;
+    width:75%;
+    right:0%;
+    bottom:0%;
+}
+
+#submit{
+    background:none;
+    background-color:lightgrey;
+    border:none;
+    text-decoration:none;
+    color:black;
+    font-weight:normal;
+    font-size:16px;
+    border-radius:20px;
+    height:40px;
+    width:80%;
+    position: absolute;
+    top:65%;
+    left:10%;
+    transition-duration:0.4s;
+}
+
+a{
+    text-decoration:none;
+}
+
+a:hover{
+    color:darkblue;
+    text-decoration:underline;
+}
+
+#submit:hover{
+    background-color:black;
+    color:white;
+}

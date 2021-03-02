@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+        Profile Page
+    </title>
+    <link rel="stylesheet" href="../styles/profile.css"/>
+</head>
+
+<body>
+    <form action={{ "/"+data[0]+"/create" }} method="GET" id="form">
+        <input id="create" type="submit" value="create"/>
+    </form>
+    <p>Profile for: {{data[1]}}</p>
+    <div id="cont">
+    <table>
+        {% for post in data[2:] %}
+        <tr>
+            <td>Likes: {{post[3]}}</td>
+            <td><a href="http://127.0.0.1:5001/posts/{{ post[2] }}"><b>{{post[5]}}</b></a></td>
+            <td>{{post[4]}}</td>
+
+            <td><form action=/{{post[2]}}/delete method="GET" id="form">
+            <input id="delete" type="submit" value="delete"/>
+                </form></td>
+
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+</body>
+
+</html>

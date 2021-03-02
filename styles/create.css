@@ -1,0 +1,27 @@
+#cont{
+  position:absolute;
+  left:10%;
+  top:10%;
+  width:60%;
+  height:50%
+}
+
+#title{
+  position:absolute;
+  left:10%
+}
+
+#submit{
+  position:absolute;
+  top:65%;
+  left:10%;
+}
+
+#contLabel{
+  position:absolute;
+  top:10%
+}
+
+body{
+  background-color:lightgrey;
+}

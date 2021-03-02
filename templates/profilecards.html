@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>
+        Profile Page
+    </title>
+    <link rel="stylesheet" href={{ url_for('static', filename='styles/profile.css') }}/>
+    <script src="https://code.jquery.com/jquery-git.js"></script>
+    <script src="../scripts/deletePost.js"></script>
+    <script src="../scripts/pagination.js"></script>
+    <script src="../scripts/voting.js"></script>
+</head>
+<body>
+    <a href="http://127.0.0.1:5001/{{data[0]}}/feed"><img src={{ url_for('static', filename='data/banana.png') }}/></a>
+    <form action={{ "/"+data[0]+"/create" }} method="GET" id="form">
+        <input id="create" type="submit" value="create"/>
+    </form>
+    <p>Profile for: {{data[2]}}</p>
+    <p></p>
+
+    {% for post in data[3:] %}
+    <p></p>
+    <div class="card" id="{{ post[2] }}">
+        <div id="buttonContainer">
+            <button type="button" class="likeButton" id="up">Like</button>
+            <p class="likes">0</p>
+            <button type="button" class="likeButton" id="down">Dis</button>
+        </div>
+        <div class="container">
+            <form action=/{{post[2]}}/delete method="POST" id="form">
+                <input class="delete" type="button" value="delete" id={{post[2]}}/>
+            </form>
+            <h3><a href="http://127.0.0.1:5001/{{data[0]}}/posts/{{post[2]}}"><b>{{post[5]}}</b></a></h3>
+            <hr></hr>
+            <p>{{ post[4] }}</p>
+            <p>
+                <small>{{ post[1] }}</small>
+            </p>
+        </div>
+    </div>
+    <p></p>
+    {% endfor %}
+    <div id = "pagination">
+        {% if data[1]|int > 1 %}
+            {% for i in range(data[1]|int) %}
+            <button type="button" id={{i}} class="pageButton">{{i + 1}}</button>
+            {% endfor %}
+        {% endif %}
+    </div>
+</body>
+</html>

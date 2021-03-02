@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registration Page</title>
+    <link rel="stylesheet" href="../styles/registerStyle.css">
+</head>
+
+<body>
+
+    <div id="colorBox2"></div>
+    <div id="colorBox3"></div>
+    <div id="colorBox1"></div>
+    <div id="colorBox4"></div>
+    <div id="loginBox">
+        <p id="signIn">Register</p>
+        <form action="/register" method="POST" id="form">
+            <label for="user" id="userLabel">Username:</label>
+            <input type="text" id="user" name="user" placeholder="Username">
+            <label for="pass" id="passLabel">Password:</label>
+            <input type="password" id="pass" name="pass" placeholder="Password">
+            <input type="submit" id="submit" value="submit">
+        </form>
+        <div id="partition">
+            <div id="regBox">
+            <p id="regMsg">Already have an account? <a href="/login" id="regLink">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
